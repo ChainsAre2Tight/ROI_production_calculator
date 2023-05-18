@@ -12,6 +12,7 @@ def get_requirements_of_a_product(product: Product, amount: int = 1) -> dict:
     product._get_requirements(
         target=requirements,
         amount=amount,
+        include=False,
     )
     return requirements
 

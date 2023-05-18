@@ -7,7 +7,6 @@ class TestProduct(unittest.TestCase):
     def test_cheese_requirements_x1(self):
         self.assertEqual(
             {
-                'Cheese': 1,
                 'Milk': 1.5,
                 'Water': 3.25,
                 'Wheat': 1.5
@@ -18,7 +17,6 @@ class TestProduct(unittest.TestCase):
     def test_cheese_requirements_x2(self):
         self.assertEqual(
             {
-                'Cheese': 2,
                 'Milk': 3,
                 'Water': 2 + 3 + 1.5,
                 'Wheat': 3
@@ -33,7 +31,6 @@ class TestProduct(unittest.TestCase):
                 'Dough': 0.5,
                 'Flour': 0.25,
                 'Milk': 0.75,
-                'Pizza': 1,
                 'Vegetables': 0.5,
                 'Water': 2.25,
                 'Wheat': 1.0
@@ -48,7 +45,6 @@ class TestProduct(unittest.TestCase):
                 'Dough': 2,
                 'Flour': 1,
                 'Milk': 3,
-                'Pizza': 4,
                 'Vegetables': 2,
                 'Water': 9,
                 'Wheat': 4,

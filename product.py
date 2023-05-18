@@ -22,11 +22,18 @@ class ProductInterface(ABC):
         pass
 
     @abstractmethod
-    def _get_requirements(self, target: dict | None = None, amount: int = 1, red: int = 1) -> dict:
+    def _get_requirements(
+            self,
+            target: dict | None = None,
+            amount: int = 1,
+            red: int = 1,
+            include: bool = True
+    ) -> dict:
         pass
 
 
 class Product(ProductInterface):
+    # TODO create product subclasses that represent different types of production to make __str__ representation nicer
 
     def __init__(self, product_type: str, production_time: int, amount_produced: int,
                  requirements: dict | None):
@@ -47,16 +54,21 @@ class Product(ProductInterface):
     def required_per_day(self):
         return {product: amount / self.production_time for product, amount in self.requirements.items()}
 
-    def _get_requirements(self, target: dict | None = None, amount: int = 1, red: int = 1) -> dict:
+    def _get_requirements(
+            self,
+            target: dict | None = None,
+            amount: int = 1,
+            red: int = 1,
+            include: bool = True
+    ) -> dict:
         if target is None:
             target = dict()
         req = amount * red
-        if self not in target.keys():
-            target[self] = 0
-        target[self] += req
+        if include:
+            if self not in target.keys():
+                target[self] = 0
+            target[self] += req
         new_red = req / self.amount_produced
         for product, amount in self.requirements.items():
-            product._get_requirements(target=target, amount=amount, red=new_red)
+            product._get_requirements(target=target, amount=amount, red=new_red, include=True)
         return target
-
-# TODO create product subclasses that represent different types of production to make __str__ representation nicer
