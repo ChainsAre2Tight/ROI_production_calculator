@@ -18,5 +18,5 @@ def get_requirements_of_a_product(product: Product, amount: int = 1) -> dict:
 
 
 if __name__ == '__main__':
-    from info import pizza
+    from products import pizza
     print(dict_keys_to_string(get_requirements_of_a_product(pizza, 1)))

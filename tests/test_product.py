@@ -1,5 +1,5 @@
 import unittest
-from info import cheese, pizza
+from products import cheese, pizza
 from main import get_requirements_of_a_product, dict_keys_to_string
 
 

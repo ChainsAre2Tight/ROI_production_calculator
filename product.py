@@ -42,8 +42,8 @@ class Product(ProductInterface):
             product_type: str,
             production_time: int,
             amount_produced: int,
-            requirements: dict | None,
             production_facility: FactoryInterface,
+            requirements: dict | None,
     ):
         self.product_type = product_type
         self.production_time = production_time
