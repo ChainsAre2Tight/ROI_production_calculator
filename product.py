@@ -13,16 +13,6 @@ class ProductInterface(ABC):
     def __str__(self):
         pass
 
-    @property
-    @abstractmethod
-    def produced_per_day(self):
-        pass
-
-    @property
-    @abstractmethod
-    def required_per_day(self):
-        pass
-
     @abstractmethod
     def get_requirements(
             self,
@@ -52,16 +42,9 @@ class Product(ProductInterface):
         self.production_facility = production_facility
 
     def __str__(self):
-        return f'''Product "{self.product_type}" takes {self.production_time} days to produce and requires {
+        return f'''Product "{self.product_type}" x{self.amount_produced} takes {
+        self.production_time} days to produce at {self.production_facility} and requires {
         ', '.join([f'{product.product_type} x {amount}' for product, amount in self.requirements.items()])}'''
-
-    @property
-    def produced_per_day(self):
-        return self.amount_produced / self.production_time
-
-    @property
-    def required_per_day(self):
-        return {product: amount / self.production_time for product, amount in self.requirements.items()}
 
     def get_requirements(
             self,

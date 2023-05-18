@@ -10,3 +10,5 @@ vegetables = Product('Vegetables', 30, 2, factories.crop_farm, {water: 1})
 flour = Product('Flour', 30, 2, factories.food_factory, {wheat: 2})
 dough = Product('Dough', 30, 2, factories.food_factory, {flour: 1, water: 1})
 pizza = Product('Pizza', 30, 2, factories.food_factory, {cheese: 1, dough: 1, vegetables: 1})
+
+leather = Product('Leather', 30, 1, factories.livestock_farm, {water: 1, wheat: 1})

@@ -1,6 +1,6 @@
 import unittest
 from products import cheese, pizza
-from main import get_requirements_of_a_product, dict_keys_to_string
+from main import get_requirements_of_a_product, dict_keys_to_string, factories_from_demand, factories_to_str
 
 
 class TestProduct(unittest.TestCase):
@@ -50,6 +50,15 @@ class TestProduct(unittest.TestCase):
                 'Wheat': 4,
             },
             dict_keys_to_string(get_requirements_of_a_product(pizza, 4))
+        )
+
+class TestRequiredFactories(unittest.TestCase):
+    def test_cheese_x8_per_15(self):
+        self.assertEqual(
+            {},
+            factories_to_str(
+                factories_from_demand(cheese, 8, 15)
+            )
         )
 
 
