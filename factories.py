@@ -1,4 +1,4 @@
-from .factory import Factory
+from factory import Factory
 
 crop_farm = Factory('Crop farm')
 water_pump = Factory('Water pump')
