@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from factory import FactoryInterface
 
 
 class ProductInterface(ABC):
@@ -6,6 +7,7 @@ class ProductInterface(ABC):
     production_time: int
     requirements: dict | None
     amount_produced: int
+    production_facility: FactoryInterface
 
     @abstractmethod
     def __str__(self):
@@ -22,7 +24,7 @@ class ProductInterface(ABC):
         pass
 
     @abstractmethod
-    def _get_requirements(
+    def get_requirements(
             self,
             target: dict | None = None,
             amount: int = 1,
@@ -35,12 +37,19 @@ class ProductInterface(ABC):
 class Product(ProductInterface):
     # TODO create product subclasses that represent different types of production to make __str__ representation nicer
 
-    def __init__(self, product_type: str, production_time: int, amount_produced: int,
-                 requirements: dict | None):
+    def __init__(
+            self,
+            product_type: str,
+            production_time: int,
+            amount_produced: int,
+            requirements: dict | None,
+            production_facility: FactoryInterface,
+    ):
         self.product_type = product_type
         self.production_time = production_time
         self.amount_produced = amount_produced
         self.requirements = requirements
+        self.production_facility = production_facility
 
     def __str__(self):
         return f'''Product "{self.product_type}" takes {self.production_time} days to produce and requires {
@@ -54,7 +63,7 @@ class Product(ProductInterface):
     def required_per_day(self):
         return {product: amount / self.production_time for product, amount in self.requirements.items()}
 
-    def _get_requirements(
+    def get_requirements(
             self,
             target: dict | None = None,
             amount: int = 1,
@@ -70,5 +79,5 @@ class Product(ProductInterface):
             target[self] += req
         new_red = req / self.amount_produced
         for product, amount in self.requirements.items():
-            product._get_requirements(target=target, amount=amount, red=new_red, include=True)
+            product.get_requirements(target=target, amount=amount, red=new_red, include=True)
         return target

@@ -9,7 +9,7 @@ def dict_keys_to_string(d: dict):
 
 def get_requirements_of_a_product(product: Product, amount: int = 1) -> dict:
     requirements = dict()
-    product._get_requirements(
+    product.get_requirements(
         target=requirements,
         amount=amount,
         include=False,
