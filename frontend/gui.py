@@ -1,10 +1,19 @@
 import tkinter as tk
 import tkinter.messagebox
 
+from backend.product import Product
 from backend.get_products import get_products
 from backend.functions import stringified_product_requirements, stringified_factories_from_demand
 from tkinter import ttk
 from dataclasses import dataclass
+
+
+class NotSelectedError(Exception):
+    pass
+
+
+class NoProductError(Exception):
+    pass
 
 
 @dataclass
@@ -42,7 +51,7 @@ class Widgets:
 
 class Window:
     root: tk.Tk
-    products: dict
+    _products: dict
     _products_var: tk.StringVar
     widgets: Widgets
     _simplified_production_chains: tk.BooleanVar  # TODO implement
@@ -58,10 +67,10 @@ class Window:
         self.root = tk.Tk()
         self.root.title(self.title)
         # self.root.geometry(self.geometry)
-        self.products = get_products()
+        self._products = get_products()
         self._products_var = tk.StringVar(value='Select a product')
         self._simplified_production_chains = tk.BooleanVar(value=True)
-        self._demand = tk.IntVar(value=0)
+        self._demand = tk.IntVar(value=1)
         self._per = tk.IntVar(value=15)
         self._output_text = tk.StringVar(value='There will be displayed results of the calculations')
 
@@ -69,29 +78,43 @@ class Window:
 
     @property
     def list_of_products(self) -> list:
-        return list(self.products.keys())
+        return list(self._products.keys())
 
     def refresh_products(self):
-        self.products = get_products()
+        self._products = get_products()
 
     @property
-    def simplified_production_chains(self):
+    def products(self):
+        return self._products
+
+    @property
+    def simplified_production_chains(self) -> bool:
         return self._simplified_production_chains.get()
 
     @property
-    def products_var(self):
+    def products_var(self) -> str:
         return self._products_var.get()
 
     @property
-    def demand(self):
+    def current_product(self) -> Product:
+        p_name = self.products_var
+        if p_name == 'Select a product':
+            raise NotSelectedError('No product is selected')
+        try:
+            return self.products[p_name]
+        except KeyError:
+            raise NoProductError(f'There is no such product "{p_name}"')
+
+    @property
+    def demand(self) -> int:
         return self._demand.get()
 
     @property
-    def per(self):
+    def per(self) -> int:
         return self._per.get()
 
     @property
-    def output_text(self):
+    def output_text(self) -> str:
         return self._output_text.get()
 
     @output_text.setter
@@ -108,7 +131,11 @@ class Window:
         # TODO implement
         if not self.simplified_production_chains:
             self.show_warning_simplified()
-        raise NotImplementedError
+        result = stringified_product_requirements(
+            product=self.current_product,
+            amount=self.demand,
+        )
+        self.output_text = result
 
     def calculate_factories(self):
         # TODO implement
