@@ -103,14 +103,16 @@ class Window:
         try:
             return self.products[p_name]
         except KeyError:
-            raise NoProductError(f'There is no such product "{p_name}"')
+            raise NoProductError(f'There is no such product "{p_name}" in products.py config')
 
     @property
     def demand(self) -> int:
+        # TODO add checks for negative values
         return self._demand.get()
 
     @property
     def per(self) -> int:
+        # TODO add checks for negative values
         return self._per.get()
 
     @property
@@ -127,15 +129,26 @@ class Window:
         tkinter.messagebox.showwarning(title='Warning',
                                        message='Disabled simplified production chains are not currently supported')
 
+    @staticmethod
+    def show_no_product_warning(msg):
+        tkinter.messagebox.showwarning(title='Warning',
+                                       message=msg)
+
     def calculate_requirements(self):
         # TODO implement
         if not self.simplified_production_chains:
             self.show_warning_simplified()
-        result = stringified_product_requirements(
-            product=self.current_product,
-            amount=self.demand,
-        )
-        self.output_text = result
+        try:
+            cur_product = self.current_product
+            result = stringified_product_requirements(
+                product=cur_product,
+                amount=self.demand,
+            )
+            self.output_text = result
+        except NoProductError as er:
+            self.show_no_product_warning(er.args[0])
+        except NotSelectedError:
+            pass
 
     def calculate_factories(self):
         # TODO implement
