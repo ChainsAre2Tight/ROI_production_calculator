@@ -55,6 +55,6 @@ if __name__ == '__main__':
         factories_from_demand(leather, 7, 15))
     )
     print(factories_to_str(
-        factories_from_demand(leather, 10, 30))
+        factories_from_demand(pizza, 9, 15))
     )
 
