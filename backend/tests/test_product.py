@@ -1,6 +1,6 @@
 import unittest
-from products import cheese, pizza
-from functions import get_requirements_of_a_product, dict_keys_to_string, factories_from_demand, factories_to_str
+from backend.information.products import cheese, pizza
+from backend.functions import get_requirements_of_a_product, dict_keys_to_string, factories_from_demand, factories_to_str
 
 
 class TestProduct(unittest.TestCase):

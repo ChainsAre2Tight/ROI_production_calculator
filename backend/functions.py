@@ -18,7 +18,7 @@ def get_requirements_of_a_product(product: Product, amount: int = 1) -> dict:
 
 
 if __name__ == '__main__':
-    from products import pizza
+    from backend.information.products import pizza
 
     # print(dict_keys_to_string(get_requirements_of_a_product(pizza, 1)))
 
@@ -50,7 +50,7 @@ def factories_to_str(f: dict):
 
 
 if __name__ == '__main__':
-    from products import leather
+    from backend.information.products import leather
     print(factories_to_str(
         factories_from_demand(leather, 7, 15))
     )

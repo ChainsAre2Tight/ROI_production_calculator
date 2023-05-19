@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from factory import FactoryInterface
+from backend.factory import FactoryInterface
 
 
 class ProductInterface(ABC):

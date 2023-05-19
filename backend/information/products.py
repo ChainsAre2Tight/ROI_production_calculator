@@ -1,5 +1,5 @@
-from product import Product
-import factories
+from backend.product import Product
+from backend.information import factories
 
 water = Product('Water', 15, 1, factories.water_pump, {})
 wheat = Product('Wheat', 30, 2, factories.crop_farm, {water: 1})
