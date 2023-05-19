@@ -1,4 +1,6 @@
 import tkinter as tk
+import tkinter.messagebox
+
 from backend.get_products import get_products
 from backend.functions import stringified_product_requirements, stringified_factories_from_demand
 from tkinter import ttk
@@ -35,16 +37,19 @@ class Widgets:
     button_calculate_requirements: tk.Button
     button_calculate_factories: tk.Button
 
+    # TODO implement a button for refreshing products
+
 
 class Window:
     root: tk.Tk
     products: dict
-    products_var: tk.StringVar
+    _products_var: tk.StringVar
     widgets: Widgets
-    simplified_production_chains: tk.BooleanVar  # TODO implement
-    demand: tk.IntVar
-    per: tk.IntVar
-    output_text = tk.StringVar
+    _simplified_production_chains: tk.BooleanVar  # TODO implement
+    _demand: tk.IntVar
+    _per: tk.IntVar
+    _output_text = tk.StringVar
+
     pad = 5
     geometry = '400x400'
     title = 'Calculator'
@@ -54,11 +59,11 @@ class Window:
         self.root.title(self.title)
         # self.root.geometry(self.geometry)
         self.products = get_products()
-        self.products_var = tk.StringVar(value='Select a product')
-        self.simplified_production_chains = tk.BooleanVar(value=True)
-        self.demand = tk.IntVar(value=0)
-        self.per = tk.IntVar(value=15)
-        self.output_text = tk.StringVar(value='There will be displayed results of the calculations')
+        self._products_var = tk.StringVar(value='Select a product')
+        self._simplified_production_chains = tk.BooleanVar(value=True)
+        self._demand = tk.IntVar(value=0)
+        self._per = tk.IntVar(value=15)
+        self._output_text = tk.StringVar(value='There will be displayed results of the calculations')
 
         self.initialize_ui()
 
@@ -69,16 +74,46 @@ class Window:
     def refresh_products(self):
         self.products = get_products()
 
-    def show_warning_simplified(self):
-        # TODO implement
-        raise NotImplementedError
+    @property
+    def simplified_production_chains(self):
+        return self._simplified_production_chains.get()
+
+    @property
+    def products_var(self):
+        return self._products_var.get()
+
+    @property
+    def demand(self):
+        return self._demand.get()
+
+    @property
+    def per(self):
+        return self._per.get()
+
+    @property
+    def output_text(self):
+        return self._output_text.get()
+
+    @output_text.setter
+    def output_text(self, text):
+        self._output_text.set(value=text)
+
+    @staticmethod
+    def show_warning_simplified():
+        """Show a warning as disabled simplified production are not currently supported"""
+        tkinter.messagebox.showwarning(title='Warning',
+                                       message='Disabled simplified production chains are not currently supported')
 
     def calculate_requirements(self):
         # TODO implement
+        if not self.simplified_production_chains:
+            self.show_warning_simplified()
         raise NotImplementedError
 
     def calculate_factories(self):
         # TODO implement
+        if not self._simplified_production_chains:
+            self.show_warning_simplified()
         raise NotImplementedError
 
     def initialize_ui(self):
@@ -107,7 +142,7 @@ class Window:
 
         combobox = ttk.Combobox(
             master=frame_product,
-            textvariable=self.products_var,
+            textvariable=self._products_var,
             values=self.list_of_products,
             width=20, )
         combobox.pack(side='left', padx=self.pad, pady=self.pad)
@@ -118,7 +153,7 @@ class Window:
 
         simplified_checkbutton = tk.Checkbutton(
             master=frame_simplified,
-            variable=self.simplified_production_chains,
+            variable=self._simplified_production_chains,
             text='Simplified production chains'
         )
         simplified_checkbutton.pack(side='left', padx=self.pad, pady=self.pad)
@@ -130,7 +165,7 @@ class Window:
         label_demand = tk.Label(master=frame_demand, text='Enter demand')
         label_demand.pack(side='left', padx=self.pad, pady=self.pad)
 
-        demand_entry = tk.Entry(master=frame_demand, textvariable=self.demand)
+        demand_entry = tk.Entry(master=frame_demand, textvariable=self._demand)
         demand_entry.pack(side='right', padx=self.pad, pady=self.pad)
 
         # demand entry and Co.
@@ -140,14 +175,14 @@ class Window:
         label_per = tk.Label(master=frame_per, text='Enter period in days')
         label_per.pack(side='left', padx=self.pad, pady=self.pad)
 
-        per_entry = tk.Entry(master=frame_per, textvariable=self.per)
+        per_entry = tk.Entry(master=frame_per, textvariable=self._per)
         per_entry.pack(side='right', padx=self.pad, pady=self.pad)
 
         # output box
         frame_output = tk.Frame(master=frame_main)
         frame_output.pack(side='top', padx=self.pad, pady=self.pad)
 
-        output_label = tk.Label(master=frame_output, textvariable=self.output_text, height=5, width=40)
+        output_label = tk.Label(master=frame_output, textvariable=self._output_text, height=5, width=40)
         output_label.pack(side='top', padx=self.pad, pady=self.pad, fill='both')
 
         # frame for buttons at the bottom of the window
