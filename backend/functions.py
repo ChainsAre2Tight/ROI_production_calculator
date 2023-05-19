@@ -1,4 +1,4 @@
-from product import Product
+from backend.product import Product
 
 
 def dict_keys_to_string(d: dict):
@@ -78,9 +78,9 @@ def stringified_product_requirements(
 if __name__ == '__main__':
     from backend.information.products import leather
 
-print(factories_to_str(
-    factories_from_demand(leather, 7, 15))
-)
-print(factories_to_str(
-    factories_from_demand(pizza, 9, 15))
-)
+    print(factories_to_str(
+        factories_from_demand(leather, 7, 15))
+    )
+    print(factories_to_str(
+        factories_from_demand(pizza, 9, 15))
+    )
