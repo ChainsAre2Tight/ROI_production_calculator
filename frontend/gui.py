@@ -109,13 +109,17 @@ class Window:
 
     @property
     def demand(self) -> int:
-        # TODO add checks for negative values
-        return self._demand.get()
+        res = self._demand.get()
+        if res <= 0:
+            raise ValueError('Demand must be >= 0')
+        return res
 
     @property
     def per(self) -> int:
-        # TODO add checks for negative values
-        return self._per.get()
+        res = self._per.get()
+        if res <= 0:
+            raise ValueError('Period must be > 0')
+        return res
 
     @property
     def output_text(self) -> str:
@@ -132,22 +136,32 @@ class Window:
                                        message='Disabled simplified production chains are not currently supported')
 
     @staticmethod
-    def show_no_product_warning(msg):
-        tkinter.messagebox.showwarning(title='Warning',
-                                       message=msg)
+    def show_no_product_error(msg):
+        tkinter.messagebox.showerror(title='Warning',
+                                     message=msg)
+
+    @staticmethod
+    def show_incorrect_input_error(msg):
+        tkinter.messagebox.showerror(
+            title='Error',
+            message=f'Incorrect input: {msg}'
+        )
 
     def calculate_requirements(self):
         if not self.simplified_production_chains:
             self.show_warning_simplified()
         try:
             cur_product = self.current_product
+            amount = self.demand
             result = get_requirements_of_a_product(
                 product=cur_product,
-                amount=self.demand,
+                amount=amount,
             )
             self.output_text = convert_requirements_to_output_format(result)
         except NoProductError as er:
-            self.show_no_product_warning(er.args[0])
+            self.show_no_product_error(er.args[0])
+        except ValueError as er:
+            self.show_incorrect_input_error(er.args[0])
         except NotSelectedError:
             pass
 
@@ -156,14 +170,18 @@ class Window:
             self.show_warning_simplified()
         try:
             cur_product = self.current_product
+            amount = self.demand
+            period = self.per
             result = factories_from_demand(
                 product=cur_product,
-                required=self.demand,
-                per=self.per,
+                required=amount,
+                per=period,
             )
             self.output_text = convert_factories_to_output_format(result)
         except NoProductError as er:
-            self.show_no_product_warning(er.args[0])
+            self.show_no_product_error(er.args[0])
+        except ValueError as er:
+            self.show_incorrect_input_error(er.args[0])
         except NotSelectedError:
             pass
 
