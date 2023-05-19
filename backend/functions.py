@@ -42,19 +42,45 @@ def factories_from_demand(
 
     return required_factories
 
+
 def factories_to_str(f: dict):
     for key in list(f.keys()):
         f[key.name] = dict_keys_to_string(f.pop(key))
     return f
 
 
+def stringified_factories_from_demand(
+        product: Product,
+        required: int,
+        per: int,
+) -> dict:
+    return factories_to_str(
+        factories_from_demand(
+            product=product,
+            required=required,
+            per=per,
+        )
+    )
+
+
+def stringified_product_requirements(
+        product: Product,
+        amount: int = 1,
+) -> dict:
+    return dict_keys_to_string(
+        get_requirements_of_a_product(
+            product=product,
+            amount=amount,
+        )
+    )
+
 
 if __name__ == '__main__':
     from backend.information.products import leather
-    print(factories_to_str(
-        factories_from_demand(leather, 7, 15))
-    )
-    print(factories_to_str(
-        factories_from_demand(pizza, 9, 15))
-    )
 
+print(factories_to_str(
+    factories_from_demand(leather, 7, 15))
+)
+print(factories_to_str(
+    factories_from_demand(pizza, 9, 15))
+)
