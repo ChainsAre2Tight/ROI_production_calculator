@@ -3,9 +3,10 @@ import tkinter.messagebox
 
 from backend.product import Product
 from backend.get_products import get_products
-from backend.functions import stringified_product_requirements, stringified_factories_from_demand
+from backend.functions import get_requirements_of_a_product, factories_from_demand
 from tkinter import ttk
 from dataclasses import dataclass
+from frontend.text_converters import convert_factories_to_output_format, convert_requirements_to_output_format
 
 
 class NotSelectedError(Exception):
@@ -67,6 +68,7 @@ class Window:
         self.root = tk.Tk()
         self.root.title(self.title)
         # self.root.geometry(self.geometry)
+        self.root.resizable(False, False)
         self._products = get_products()
         self._products_var = tk.StringVar(value='Select a product')
         self._simplified_production_chains = tk.BooleanVar(value=True)
@@ -135,26 +137,35 @@ class Window:
                                        message=msg)
 
     def calculate_requirements(self):
-        # TODO implement
         if not self.simplified_production_chains:
             self.show_warning_simplified()
         try:
             cur_product = self.current_product
-            result = stringified_product_requirements(
+            result = get_requirements_of_a_product(
                 product=cur_product,
                 amount=self.demand,
             )
-            self.output_text = result
+            self.output_text = convert_requirements_to_output_format(result)
         except NoProductError as er:
             self.show_no_product_warning(er.args[0])
         except NotSelectedError:
             pass
 
     def calculate_factories(self):
-        # TODO implement
         if not self._simplified_production_chains:
             self.show_warning_simplified()
-        raise NotImplementedError
+        try:
+            cur_product = self.current_product
+            result = factories_from_demand(
+                product=cur_product,
+                required=self.demand,
+                per=self.per,
+            )
+            self.output_text = convert_factories_to_output_format(result)
+        except NoProductError as er:
+            self.show_no_product_warning(er.args[0])
+        except NotSelectedError:
+            pass
 
     def initialize_ui(self):
         # main window frame
@@ -222,12 +233,12 @@ class Window:
         frame_output = tk.Frame(master=frame_main)
         frame_output.pack(side='top', padx=self.pad, pady=self.pad)
 
-        output_label = tk.Label(master=frame_output, textvariable=self._output_text, height=5, width=40)
+        output_label = tk.Label(master=frame_output, textvariable=self._output_text, width=40, justify='left')
         output_label.pack(side='top', padx=self.pad, pady=self.pad, fill='both')
 
         # frame for buttons at the bottom of the window
         frame_bottom = tk.Frame(master=frame_main)
-        frame_bottom.pack(side='top', padx=self.pad, pady=self.pad)
+        frame_bottom.pack(side='bottom', padx=self.pad, pady=self.pad)
 
         button_calculate_requirements = tk.Button(
             master=frame_bottom,
