@@ -46,8 +46,7 @@ class Widgets:
     frame_bottom_buttons: tk.Frame
     button_calculate_requirements: tk.Button
     button_calculate_factories: tk.Button
-
-    # TODO implement a button for refreshing products
+    refresh_products_button: tk.Button
 
 
 class Window:
@@ -261,16 +260,23 @@ class Window:
         button_calculate_requirements = tk.Button(
             master=frame_bottom,
             command=self.calculate_requirements,
-            text='Calculate requirements'
+            text='Calculate requirements',
         )
-        button_calculate_requirements.pack(side='left')
+        button_calculate_requirements.pack(side='left', padx=1)
 
         button_calculate_factories = tk.Button(
             master=frame_bottom,
             command=self.calculate_factories,
-            text='Calculate factories'
+            text='Calculate factories',
         )
-        button_calculate_factories.pack(side='left')
+        button_calculate_factories.pack(side='left', padx=1)
+
+        button_refresh_products = tk.Button(
+            master=frame_bottom,
+            command=self.refresh_products,
+            text='Refresh products',
+        )
+        button_refresh_products.pack(side='left', padx=1)
 
         self.widgets = Widgets(
             main_frame=frame_main,
@@ -293,6 +299,7 @@ class Window:
             frame_bottom_buttons=frame_bottom,
             button_calculate_requirements=button_calculate_requirements,
             button_calculate_factories=button_calculate_factories,
+            refresh_products_button=button_refresh_products,
         )
 
 
