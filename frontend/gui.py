@@ -240,7 +240,7 @@ class Window:
         frame_per = tk.Frame(master=frame_right)
         frame_per.pack(side='top', fill='x')
 
-        label_per = tk.Label(master=frame_per, text='Enter period in days')
+        label_per = tk.Label(master=frame_per, text='Enter reference period')
         label_per.pack(side='left', padx=self.pad, pady=self.pad)
 
         per_entry = tk.Entry(master=frame_per, textvariable=self._per)

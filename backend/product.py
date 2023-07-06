@@ -4,7 +4,7 @@ from backend.factory import FactoryInterface
 
 class ProductInterface(ABC):
     product_type: str
-    production_time: int
+    production_time: float | int
     requirements: dict | None
     amount_produced: int
     production_facility: FactoryInterface
@@ -30,7 +30,7 @@ class Product(ProductInterface):
     def __init__(
             self,
             product_type: str,
-            production_time: int,
+            production_time: float | int,
             amount_produced: int,
             production_facility: FactoryInterface,
             requirements: dict | None,
